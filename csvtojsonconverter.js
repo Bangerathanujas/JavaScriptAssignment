@@ -1,13 +1,18 @@
 var fs=require('fs');
 const readline=require('readline');
 //creating json flie1
- var res1=fs.createWriteStream('result.json');
+ var res1=fs.createWriteStream('result1.json');
  res1.readable=true;
  res1.writable=true;
 //creating json flie2
- var res2=fs.createWriteStream('result.json');
+ var res2=fs.createWriteStream('result2.json');
  res2.readable=true;
  res2.writable=true;
+
+ //creating json flie3
+  var res3=fs.createWriteStream('result3.json');
+  res3.readable=true;
+  res3.writable=true;
 
 //crating a interface to read each line
 const readl=readline.createInterface({
@@ -21,6 +26,9 @@ var urbanPlusRural=[];
 var sum=0;
 var india={};
 var asia={};
+var sumurban=0;
+var sumrural=0;
+var a3=[];
 var countries = ["Afghanistan", "Bahrain", "Bangladesh", "Bhutan", "Myanmar", "Cambodia", "China", "India", "Indonesia", "Iraq", "Israel", "Japan", "Jordan", "Kazakhstan", "Lebanon", "Malaysia", "Maldives", "Mongolia", "Nepal",
   "Oman", "Pakistan", "Philippines", "Qatar", "Saudi Arabia", "Singapore", "Sri Lanka", "Syrian Arab Republic", "Tajikistan", "Thailand", "Timor-Leste", "Turkmenistan", "United Arab Emirates", "Uzbekistan", "Vietnam", "Yemen"];
 var i=0;//for collect only headers from given data
@@ -80,7 +88,11 @@ readl.on('close',()=>{
       for (var i = 0; i < a2.length-1; i++) {
         if(a2[i].CountryName == countries[c]){
             if(a2[i].Year == y){
+              //console.log(a2[i].Value);
         sum=sum+(parseFloat(a2[i].Value))+(parseFloat(a2[i+1].Value));
+        sumurban=sumurban+parseFloat(a2[i].Value);
+        sumrural=sumrural+parseFloat(a2[i+1].Value);
+        console.log(sumurban);
         urbanPlusRural.push({CountryName:a2[i].CountryName,Value:sum});
         urbanPlusRural.sort(function(a,b){
    return b.Value-a.Value;
@@ -94,11 +106,18 @@ readl.on('close',()=>{
 
   }
   urbanPlusRural=[];
+  a3.push({"year":y,"urban":sumurban,"rural":sumrural});
+
+  sumurban=0;
+  sumrural=0;
 }
 /* putting the india and asia json objects into  a json file*/
-  india.India=a1;
-// console.log(india);
-res1.write(JSON.stringify(india));
-res2.write(JSON.stringify(asia));
-//console.log(asia);
+
+
+
+
+res1.write(JSON.stringify(a1));
+res2.write(JSON.stringify(asia[1960]));
+res3.write(JSON.stringify(a3));
+
 });
